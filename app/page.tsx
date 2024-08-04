@@ -1,3 +1,4 @@
+import HeroCarousel from "@/components/HeroCarousel";
 import Searchbar from "@/components/Searchbar";
 import Image from "next/image";
 
@@ -23,9 +24,11 @@ const Home = () => {
               Análises poderosas e de autoatendimento de produtos e crescimento
               para ajudá-lo a converter, engajar e reter mais.
             </p>
+
             <Searchbar />
           </div>
-          HeroCarousel
+
+          <HeroCarousel />
         </div>
       </section>
 
