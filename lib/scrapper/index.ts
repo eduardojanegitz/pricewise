@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { extractCurrrency, extractPrice } from "../utils";
+import { extractCurrency, extractDescription, extractPrice } from "../utils";
 
 export async function scrapeAmazonProduct(url: string) {
   if (!url) return;
@@ -49,18 +49,33 @@ export async function scrapeAmazonProduct(url: string) {
 
     const imageUrls = Object.keys(JSON.parse(images));
 
-    const currency = extractCurrrency($(".a-price-symbol"));
+    const currency = extractCurrency($(".a-price-symbol"));
     const discountRate = $(".savingsPercentage").text().replace(/[-%]/g, "");
 
-    console.log({
+    const description = extractDescription($)
+
+    // Construct data object with scraped information
+    const data = {
+      url,
+      currency: currency || "$",
+      image: imageUrls[0],
       title,
-      currentPrice,
-      originalPrice,
-      outOfStock,
-      imageUrls,
-      currency,
-      discountRate,
-    });
+      currentPrice: Number(currentPrice) || Number(originalPrice),
+      originalPrice: Number(originalPrice) || Number(currentPrice),
+      praceHistory: [],
+      discountRate: Number(discountRate),
+      category: "category",
+      reviewsCount: 100,
+      stars: 4.5,
+      isOutOfStock: outOfStock,
+      description,
+      lowerPrice: Number(currentPrice) || Number(originalPrice),
+      highestPrice: Number(originalPrice) || Number(currentPrice),
+      avarage: Number(currentPrice) || Number(originalPrice)
+    };
+
+    // console.log(data);
+    return data;
   } catch (error: any) {
     throw new Error(`Falha ao encontrar produto: ${error.message}`);
   }
